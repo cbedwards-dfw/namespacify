@@ -7,6 +7,14 @@
 \description{
 What the package does (one paragraph).
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/cbedwards-dfw/namespacify}
+  \item Report bugs at \url{https://github.com/cbedwards-dfw/namespacify/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Collin Edwards \email{Collin.Edwards@dfw.wa.gov} (\href{https://orcid.org/0000-0002-4937-5159}{ORCID})
 

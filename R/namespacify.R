@@ -69,10 +69,9 @@ namespacify = function(
       r_files = grep(".R$|.Rmd$|.Qmd", r_files, value = TRUE, ignore.case = TRUE)
     }else{
       if(verbose){
-        cli::cli_alert("`folder` argument is not a folder. Assuming it's a filename or vector of filenames. Namespacifying this/these file(s), constraining to only .R, .Rmd, and .Qmd filetypes.")
+        cli::cli_alert("`folder` argument is not a folder. Assuming it's a filename or vector of filenames. Namespacifying all of these file(s)")
       }
       r_files = folder
-      r_files = grep(".R$|.Rmd$|.Qmd", r_files, value = TRUE, ignore.case = TRUE)
     }
   }
   purrr::walk(r_files, \(x) namespacify_file(file = x, vec.replacement = vec.replacement, verbose = verbose))

@@ -26,14 +26,42 @@ to facilitate converting scripts to packages.
 You can install the development version of namespacify like so:
 
 ``` r
-
+remotes::install_github("cbedwards-dfw/namespacify")
 ```
+
+or
+
+``` r
+pak::pkg_install("cbedwards-dfw/namespacify")
+```
+
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+When developing the `CreelEstimateR` package, we already had functions written, but as is
+common for non-package scripts, the R code did not include the package prefixes.
+We were able to rapidly add prefixes for the packages we used by first adding all the
+functions to the `R/` folder, and then running the following code:
 
-```{r example}
-library(namespacify)
-## basic example code
+```r
+namespacify(packages = c("dplyr", "ggplot2", "purrr", "tidyr", "DBI", "readr", "stringr", "tidyselect"))
+```
+
+To apply package prefixes to all R, Qmd, and Rmd files in a specific folder (instead of to `here::here("R")` as is the default),
+you can provide the path to the folder with the `folder` argument.
+
+```r
+namespacify(packages = c("dplyr", "ggplot2", "purrr", "tidyr", "DBI", "readr", "stringr", "tidyselect"),
+folder = "analysis/scripts")
+```
+
+To add namespace prefixes to just a specific file or collection of files, provide the filepath or a vector of filepaths in the `folder` argument 
+
+```r
+## single file
+namespacify(packages = c("dplyr", "ggplot2", "purrr", "tidyr", "DBI", "readr", "stringr", "tidyselect"),
+folder = "analysis/scripts/cleaning_data.R")
+
+namespacify(packages = c("dplyr", "ggplot2", "purrr", "tidyr", "DBI", "readr", "stringr", "tidyselect"),
+folder = c("analysis/scripts/cleaning_data.R","analysis/scripts/fitting_models.R"))
 ```
