@@ -3,9 +3,9 @@
 \docType{package}
 \name{namespacify-package}
 \alias{namespacify-package}
-\title{namespacify: What the Package Does (One Line, Title Case)}
+\title{namespacify: Add Namespace Prefixes}
 \description{
-What the package does (one paragraph).
+Add namespace prefixes to R functions in scripts to streamline package development
 }
 \seealso{
 Useful links:
