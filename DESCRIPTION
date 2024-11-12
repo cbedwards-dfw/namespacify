@@ -18,3 +18,5 @@ Imports:
     purrr,
     rlang,
     stringr
+URL: https://github.com/cbedwards-dfw/namespacify
+BugReports: https://github.com/cbedwards-dfw/namespacify/issues
