@@ -13,7 +13,7 @@ namespacify(
 )
 }
 \arguments{
-\item{packages}{character string of packages to apply namespace prefixes for. In the specified files (below), all functions used by these packages will be the package prefix (e.g. "dplyr::")}
+\item{packages}{character string of packages to apply namespace prefixes for. In the specified files (below), all functions used by these packages will be the package prefix (e.g. "dplyr::"). To detect likely packages to include, see \code{detect_packages()}.}
 
 \item{error.on.collision}{If two or more packages share a function name (e.g., \{stats\} and \{dplyr\}), should the function error (TRUE) or warn (FALSE)}
 
@@ -27,13 +27,20 @@ namespacify(
 Nothing
 }
 \description{
-Workhorse function. There is special handling for "function collisions" -- cases when two or more specified
+Workhorse function -- this can be called to add the appropriate namespace prefixes to all functions
+of the specified package(s) (e.g., adding \verb{dplyr::} to \code{mutate()}) for specific files, all R-related files in a folder,
+or all R-related files in the "R/" folder (see the \code{folder} argument for details). Users must provide the packages
+for which prefixes can be added, but \code{detect_packages()} provides a suggested list by scanning for
+\code{library()} and \code{require()} calls in the files to be updated. See Details for notes on
+how function collisions are handled.
+}
+\details{
+There is special handling for "function collisions" -- cases when two or more specified
 packages have one or more functions with the same name. If \code{error.on.collision} is set to TRUE,
 collisions will cause \code{namspacify} to identify collisions, and then stop.
 Users can then specify individual functions to ignore with the \code{funs.ignore} argument.
 This is the safest approach to ambiguity.
-}
-\details{
+
 For example, \{dplyr\} and \{stats\} both have a \code{filter()} function. \code{namespacify()}
 doesn't know whether to replace \verb{filter(} with \verb{dplyr::filter(} or \verb{stats::filter(}.
 For this reason, \code{namespacify()} will error unless a user included "filter" in
