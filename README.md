@@ -57,3 +57,12 @@ folder = "analysis/scripts/cleaning_data.R")
 namespacify(packages = c("dplyr", "ggplot2", "purrr", "tidyr", "DBI", "readr", "stringr", "tidyselect"),
 folder = c("analysis/scripts/cleaning_data.R","analysis/scripts/fitting_models.R"))
 ```
+
+### Identifying packages
+
+If you do not know the list of appropriate packages already,
+`namespacify::package_detect()` will search the provided `folder`
+argument for any use of `library()` and `require()`, and return the
+associated packages. It will also suggest adding those packages to your
+package’s namespace with `usethis::use_package()`, and will load an
+appropriate function call to your clipboard.

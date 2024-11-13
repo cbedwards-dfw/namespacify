@@ -13,7 +13,7 @@
 #' @return Vector of packages in use, which can be used as the `packages` argument for `namespacify()`.
 #' @export
 #'
-package_detect = function(
+detect_packages = function(
     folder = NULL
 ){
   r_files = identify_files(folder = folder, verbose = TRUE)
