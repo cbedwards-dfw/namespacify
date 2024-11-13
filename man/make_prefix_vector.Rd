@@ -12,7 +12,7 @@ make_prefix_vector(
 )
 }
 \arguments{
-\item{packages}{character string of packages to apply namespace prefixes for. In the specified files (below), all functions used by these packages will be the package prefix (e.g. "dplyr::")}
+\item{packages}{character string of packages to apply namespace prefixes for. In the specified files (below), all functions used by these packages will be the package prefix (e.g. "dplyr::"). To detect likely packages to include, see \code{detect_packages()}.}
 
 \item{error.on.collision}{If two or more packages share a function name (e.g., \{stats\} and \{dplyr\}), should the function error (TRUE) or warn (FALSE)}
 

@@ -2,4 +2,5 @@
 
 export(make_prefix_vector)
 export(namespacify)
+export(package_detect)
 importFrom(rlang,.data)

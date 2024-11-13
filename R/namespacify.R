@@ -1,6 +1,13 @@
 #' Apply namespace prefixes to one or more files
 #'
-#' Workhorse function. There is special handling for "function collisions" -- cases when two or more specified
+#' Workhorse function -- this can be called to add the appropriate namespace prefixes to all functions
+#' of the specified package(s) (e.g., adding `dplyr::` to `mutate()`) for specific files, all R-related files in a folder,
+#' or all R-related files in the "R/" folder (see the `folder` argument for details). Users must provide the packages
+#' for which prefixes can be added, but `detect_packages()` provides a suggested list by scanning for
+#' `library()` and `require()` calls in the files to be updated. See Details for notes on
+#' how function collisions are handled.
+
+#' @details There is special handling for "function collisions" -- cases when two or more specified
 #' packages have one or more functions with the same name. If `error.on.collision` is set to TRUE,
 #' collisions will cause `namspacify` to identify collisions, and then stop.
 #' Users can then specify individual functions to ignore with the `funs.ignore` argument.
@@ -20,7 +27,7 @@
 #' FALSE will allow the assignment of a relevant namespace prefix to all functions. (Note that reexporting among
 #' the tidyverse packages is already addressed; see details see details).
 #'
-#' @details Dev note:  The Tidyverse packages frequently re-export functions (e.g., dplyr includes functions from the tibble package).
+#' Dev note:  The Tidyverse packages frequently re-export functions (e.g., dplyr includes functions from the tibble package).
 #' This means that including multiple tidyverse packages will automatically lead to "function collisions",
 #' even though they are identical versions of the function, so the choice of namespace doesn't matter.
 #' Right now I have a workaround that skips these internal-to-tidyverse collisions -- these within-tidyverse
@@ -29,7 +36,7 @@
 #' in the `packages` argument.A cleaner solution would be to identify which package is being rexported *from*, and use that.
 #' I could not identify an easy way to do so.
 #'
-#' @param packages character string of packages to apply namespace prefixes for. In the specified files (below), all functions used by these packages will be the package prefix (e.g. "dplyr::")
+#' @param packages character string of packages to apply namespace prefixes for. In the specified files (below), all functions used by these packages will be the package prefix (e.g. "dplyr::"). To detect likely packages to include, see `detect_packages()`.
 #' @param error.on.collision If two or more packages share a function name (e.g., \{stats\} and \{dplyr\}), should the function error (TRUE) or warn (FALSE)
 #' @param funs.ignore Character vector of functions to skip when adding namespace prefixes as a solution to function collisions. Defaults to NULL.
 #' @param verbose Print details to console? Defaults to TRUE.
@@ -58,22 +65,8 @@ namespacify = function(
                                        funs.ignore = funs.ignore,
                                        verbose = verbose
   )
-  if(is.null(folder)){
-    r_files <- fs::dir_ls(here::here("R"))
-  }else{
-    if(length(folder == 1) & dir.exists(folder)){
-      if(verbose){
-        cli::cli_alert("`folder` argument appears to be folder. Namespacifying all R, Rmd, and Qmd files in folder")
-      }
-      r_files <- fs::dir_ls(folder)
-      r_files = grep(".R$|.Rmd$|.Qmd", r_files, value = TRUE, ignore.case = TRUE)
-    }else{
-      if(verbose){
-        cli::cli_alert("`folder` argument is not a folder. Assuming it's a filename or vector of filenames. Namespacifying all of these file(s)")
-      }
-      r_files = folder
-    }
-  }
+  r_files = identify_files(folder = folder, verbose = verbose)
+
   purrr::walk(r_files, \(x) namespacify_file(file = x, vec.replacement = vec.replacement, verbose = verbose))
 }
 ## updates:
@@ -166,4 +159,32 @@ make_prefix_vector = function(packages,
   res = df.final$pattern
   names(res) = df.final$replacement
   return(res)
+}
+
+#' Identify files to namespacify
+#'
+#' For internal use.
+#'
+#' @inheritParams namespacify
+#'
+#' @return vector of R file paths
+#'
+identify_files = function(folder, verbose = TRUE){
+  if(is.null(folder)){
+    r_files <- fs::dir_ls(here::here("R"))
+  }else{
+    if(length(folder == 1) & dir.exists(folder)){
+      if(verbose){
+        cli::cli_alert("`folder` argument appears to be folder. Selecting all R, Rmd, and Qmd files in folder")
+      }
+      r_files <- fs::dir_ls(folder)
+      r_files = grep(".R$|.Rmd$|.Qmd", r_files, value = TRUE, ignore.case = TRUE)
+    }else{
+      if(verbose){
+        cli::cli_alert("`folder` argument is not a folder. Assuming it's a filename or vector of filenames. Selecting all of these file(s)")
+      }
+      r_files = folder
+    }
+  }
+  return(r_files)
 }
